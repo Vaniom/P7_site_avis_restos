@@ -1,6 +1,6 @@
 var index = 0;
 var liste = [];
-function executerRequete(callback) {
+function executerRequete() {
     // on vérifie si la liste a déjà été chargé pour n'exécuter la requête AJAX
     // qu'une seule fois
     if (liste.length === 0) {
