@@ -29,17 +29,29 @@ function executerRequete() {
 executerRequete();
 
 function doList() {
+    var moy;
+    var somme = 0;
     liste.forEach(function(element) {
         var listUL = document.getElementById("listUL");
         var li = document.createElement("li");
-        li.textContent = element.restaurantName;
+        var titre = document.createElement("h3");
+        var note = document.createElement("p");
+        moyenne(element);
+        titre.textContent = element.restaurantName;
+        note.textContent = "Moyenne des notes: " + moy + " sur 5";
+        li.appendChild(titre);
+        li.appendChild(note);
         listUL.appendChild(li);
+        
+        function moyenne(element) {
+            for (var i = 0; i < element.ratings.length; i++) {
+                somme = element.ratings[i].stars + parseInt(somme);
+                console.log("somme = " + somme);
+            }
+            moy = somme / (element.ratings.length);
+            console.log("moyenne = " + moy);
+            somme = 0;
+        }
+        
     })
 }
-/*
-$(function(){
-    $.getJSON('resto_data.json', function(data){
-        $('#listUL').html('<li>' + data.restaurantName + '</li>');
-    })
-})
-*/

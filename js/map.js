@@ -10,7 +10,7 @@ function initMap() {
     });
 
     // Try HTML5 geolocation.
-     /* 
+     
     var pos;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -35,15 +35,16 @@ function initMap() {
         position: pos,
         map: map
     });
-}
+
 
 function handleLocationError(browserHasGeolocation, marker, pos) {
     window.alert(browserHasGeolocation ?
         'Erreur: Le service de géolocalisation a échoué' :
         'Erreur: Votre navigateur ne supporte pas la geolocalisation');
 }
-*/
+
    // Geolocalisation via Google API
+   /*
     var req = new XMLHttpRequest();
     var url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + myApiKey;
     // Requête HTTP POST
@@ -60,6 +61,7 @@ function handleLocationError(browserHasGeolocation, marker, pos) {
         lat: userLat,
         lng: userLng
     };
+    */
     var image = {
         url: './img/user_marker.png',
         // This marker is 60 pixels wide by 60 pixels high.
