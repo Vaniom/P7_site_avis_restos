@@ -10,3 +10,9 @@ html, body {
 .content {
     margin-top: 50px;
 }
+#listUL li {
+    display: none;
+}
+.show {
+    display: block !important;
+}

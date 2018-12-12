@@ -1,4 +1,4 @@
-var map, marker;
+var map, marker, rectangle;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -13,6 +13,7 @@ function initMap() {
      
     var pos;
     if (navigator.geolocation) {
+        //Recupération des coordonnées de l'utilisateur
         navigator.geolocation.getCurrentPosition(function (position) {
             pos = {
                 lat: position.coords.latitude,
@@ -30,60 +31,77 @@ function initMap() {
         // Browser doesn't support Geolocation
         handleLocationError(false, map.getCenter());        
     }
-    
-function handleLocationError(browserHasGeolocation, marker, pos) {
-    window.alert(browserHasGeolocation ?
-        'Erreur: Le service de géolocalisation a échoué' :
-        'Erreur: Votre navigateur ne supporte pas la geolocalisation');
-}
 
-   // Geolocalisation via Google API
-   /*
-    var req = new XMLHttpRequest();
-    var url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + myApiKey;
-    // Requête HTTP POST
-    req.open("POST", url, false);
-    // Envoi de la requête
-    req.send(null);
-    // Affiche la réponse reçue pour la requête    
-    var userLocation = JSON.parse(req.response);
-    var userLat = userLocation.location.lat;
-    var userLng = userLocation.location.lng;
-    console.log("userLat " + userLat);
-    console.log("userLng " + userLng);
-    var pos = {
-        lat: userLat,
-        lng: userLng
-    };
-    */
-    var image = {
-        url: './img/user_marker.png',
-        // This marker is 60 pixels wide by 60 pixels high.
-        size: new google.maps.Size(100, 100),
-        // The origin for this image is (0, 0).
-        origin: new google.maps.Point(0, 0),
-        // The anchor for this image is at (30, 60).
-        anchor: new google.maps.Point(50, 100)
-      };
-    map.setZoom(8);
-    map.setCenter(pos);
+    function handleLocationError(browserHasGeolocation, marker, pos) {
+        window.alert(browserHasGeolocation ?
+            'Erreur: Le service de géolocalisation a échoué' :
+            'Erreur: Votre navigateur ne supporte pas la geolocalisation');
+    }
+    // placement d'un marqueur à la position de l'utilisateur
     marker = new google.maps.Marker({
-        position: pos,
         map: map,
-        title: 'Vous êtes ici',
-        icon: image
+        icon: './img/user_marker.png'
     });
-    console.log("liste = " + liste);
-    liste.forEach(function(element) {
-        var restoPos = {
-            lat: element.lat,
-            lng: element.long
-        };
-        var restoName = element.restaurantName;
-        var restoMarker = new google.maps.Marker({
-            position: restoPos,
-            map: map,
-            title: restoName
-        });
+
+    // definition d'un polygone aux dimensions de la zone affichée
+    rectangle = new google.maps.Polygon(
+        {
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.0,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.0,
+            map: map
+          }
+    );
+    //on recupere les coordonnées de limite de carte à chaque redimensionnement pour faire varier le rectangle en fonction
+    map.addListener('bounds_changed', function(){
+        var bds = map.getBounds();
+        var rectangleCoord = [
+            {lat: bds.la.j, lng: bds.ea.j},
+            {lat: bds.la.l, lng: bds.ea.j},
+            {lat: bds.la.l, lng: bds.ea.l},
+            {lat: bds.la.j, lng: bds.ea.l},
+            {lat: bds.la.j, lng: bds.ea.j}
+        ]
+        rectangle.setPath(rectangleCoord);
+        listUpdate();
     })
+
+    console.log("liste = " + liste);
+    //Recuperation des données de restaurants
+    function listUpdate() {
+        liste.forEach(function(element) {
+            var restoPos = {
+                lat: element.lat,
+                lng: element.long
+            };
+            var restoName = element.restaurantName;
+            //Placement d'un marqueur pour chaque resto
+            var restoMarker = new google.maps.Marker({
+                position: restoPos,
+                map: map,
+                label: restoName,
+                icon: './img/restaurant.png'
+            });
+            //On verifie pour chaque resto s'il est dans la zone d'affcihage ou non, et on actualise l'affichage de la liste en fonction
+            function isInRectangle(){
+                var pointLat = element.lat;
+                var pointLng = element.long;
+                var point = new google.maps.LatLng(pointLat, pointLng);
+                console.log("point = " + point);
+                if (google.maps.geometry.poly.containsLocation(point, rectangle)){
+                    console.log("IN");
+                    var elm = document.getElementById(restoName);
+                    console.log("restoname = " + restoName);
+                    elm.classList.add("show");
+                }else {
+                    console.log("OUT");
+                    var elm = document.getElementById(restoName);
+                    elm.classList.remove("show");
+                }
+            }
+            var timeoutID = window.setTimeout(isInRectangle, 1000);     
+        })
+    }
 }

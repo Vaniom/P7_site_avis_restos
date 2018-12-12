@@ -1,5 +1,6 @@
 var index = 0;
 var liste = [];
+var li, listUL, div;
 function executerRequete() {
     // on vérifie si la liste a déjà été chargé pour n'exécuter la requête AJAX
     // qu'une seule fois
@@ -32,25 +33,50 @@ function doList() {
     var moy;
     var somme = 0;
     liste.forEach(function(element) {
-        var listUL = document.getElementById("listUL");
-        var li = document.createElement("li");
+        moyenne(element);
+        listUL = document.getElementById("listUL");
+        li = document.createElement("li");
         var titre = document.createElement("h3");
         var note = document.createElement("p");
-        moyenne(element);
         titre.textContent = element.restaurantName;
-        note.textContent = "Moyenne des notes: " + moy.toFixed(1) + " sur 5";
+        note.textContent = "Note moy.: " + moy.toFixed(1) + " sur 5";
         li.appendChild(titre);
+        li.id = element.restaurantName;
+        li.classList.add("clickable");
         li.appendChild(note);
+        li.appendChild(document.createElement('hr'));
+        comments(element);
         listUL.appendChild(li);
+        /*titre.addEventListener('click', function(){
+            var comment = li.getElementsByClassName("comment");
+            console.log("comment = " + comment);
+            Array.prototype.filter.call(comment, function(element){
+                element.style.display = "block";
+            })
+            //comments.style.display="block";
+            //window.alert("click");
+            
+        })
+        */
     });
-        
+    //Recuperation des notes pour calcul de la moyenne
     function moyenne(element) {
         for (var i = 0; i < element.ratings.length; i++) {
             somme = element.ratings[i].stars + parseInt(somme);
-            console.log("somme = " + somme);
+
         }
         moy = somme / (element.ratings.length);
-        console.log("moyenne = " + moy);
         somme = 0;
-    }     
+    }
+    // recupération et affichage des commentaires
+    function comments(element) {
+        for (var i = 0; i < element.ratings.length; i++) {
+            var stars = element.ratings[i].stars;
+            var avis = element.ratings[i].comment;
+            div = document.createElement('div');
+            div.innerHTML = "<p class='comment'>Commentaire N° " + (i+1) + ":  " + avis + "<br/>Note : " + stars + "</p>";
+            //var collapseDiv = document.getElementById("comments");
+            li.appendChild(div);
+        }
+    }
 }

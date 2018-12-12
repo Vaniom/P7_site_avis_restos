@@ -14,13 +14,13 @@
             3. commentez la ligne 17 en ajoutant // en debut de ligne.
             */
             //var url = "https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap";
-            var url = "https://maps.googleapis.com/maps/api/js?key=" + myApiKey + "&callback=initMap";
+            var url = "https://maps.googleapis.com/maps/api/js?key=" + myApiKey + "&libraries=geometry&callback=initMap";
             var script = document.createElement("script");
             script.src = url;
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
-        </script>     
+        </script>
     </head>
     <body>
         <div class="container">
@@ -36,7 +36,7 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>        
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>   
         <script src="./js/map.js"></script>
         <script src="./js/xmlhttpreq.js"></script>
         <script src="./js/markers.js"></script>
