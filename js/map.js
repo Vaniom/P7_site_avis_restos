@@ -28,15 +28,9 @@ function initMap() {
         });
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError(false, map.getCenter());
-        
+        handleLocationError(false, map.getCenter());        
     }
-    marker = new google.maps.Marker({
-        position: pos,
-        map: map
-    });
-
-
+    
 function handleLocationError(browserHasGeolocation, marker, pos) {
     window.alert(browserHasGeolocation ?
         'Erreur: Le service de géolocalisation a échoué' :
@@ -65,11 +59,11 @@ function handleLocationError(browserHasGeolocation, marker, pos) {
     var image = {
         url: './img/user_marker.png',
         // This marker is 60 pixels wide by 60 pixels high.
-        size: new google.maps.Size(60, 60),
+        size: new google.maps.Size(100, 100),
         // The origin for this image is (0, 0).
         origin: new google.maps.Point(0, 0),
         // The anchor for this image is at (30, 60).
-        anchor: new google.maps.Point(30, 60)
+        anchor: new google.maps.Point(50, 100)
       };
     map.setZoom(8);
     map.setCenter(pos);
@@ -79,4 +73,17 @@ function handleLocationError(browserHasGeolocation, marker, pos) {
         title: 'Vous êtes ici',
         icon: image
     });
+    console.log("liste = " + liste);
+    liste.forEach(function(element) {
+        var restoPos = {
+            lat: element.lat,
+            lng: element.long
+        };
+        var restoName = element.restaurantName;
+        var restoMarker = new google.maps.Marker({
+            position: restoPos,
+            map: map,
+            title: restoName
+        });
+    })
 }

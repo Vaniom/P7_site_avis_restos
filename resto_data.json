@@ -30,5 +30,41 @@
              "comment":"J'ai trouvé ça correct, sans plus"
           }
        ]
-    }
+    },
+    {
+      "restaurantName":"Mic Mac Do",
+      "address":"21 Avenue Jacques Duclos, 63910 Vertaizon",
+      "lat":45.785990,
+      "long":3.286506,
+      "ratings":[
+         {
+            "stars":2,
+            "comment":"Dommage qu'à 14h20 il ait fallu attendre + 10mn pour 3 hamburgers..... au drive.!!"
+         },
+         {
+            "stars":3,
+            "comment":"Hamburger régulièrement mis en vrac dans sa boîte."
+         }
+      ]
+   },
+   {
+      "restaurantName":"La Grange",
+      "address":"Chemin de la Lissandre, 63430 Pont-du-Château",
+      "lat":45.793352,
+      "long":3.229127,
+      "ratings":[
+         {
+            "stars":5,
+            "comment":"Super resto convivial et assiette très copieuse...un delice"
+         },
+         {
+            "stars":4,
+            "comment":"Carte variée avec notamment pizzas et burgers."
+         },
+         {
+            "stars":5,
+            "comment":"Menu du jour , entrée plat et dessert à 12,5 euros."
+         }
+      ]
+   }
  ]
