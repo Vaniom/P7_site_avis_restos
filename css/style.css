@@ -12,7 +12,15 @@ html, body {
 }
 #listUL li {
     display: none;
+    padding : 5px;
 }
 .show {
     display: block !important;
+}
+.showElt {
+    display: block !important;
+    background-color: lightgrey;
+}
+.hide {
+    display: none !important;
 }

@@ -39,7 +39,7 @@ function doList() {
         var titre = document.createElement("h3");
         var note = document.createElement("p");
         titre.textContent = element.restaurantName;
-        note.textContent = "Note moy.: " + moy.toFixed(1) + " sur 5";
+        note.textContent = "Note moy.: " + moy.toFixed(1);
         li.appendChild(titre);
         li.id = element.restaurantName;
         li.classList.add("clickable");
@@ -47,18 +47,26 @@ function doList() {
         li.appendChild(document.createElement('hr'));
         comments(element);
         listUL.appendChild(li);
-        /*titre.addEventListener('click', function(){
-            var comment = li.getElementsByClassName("comment");
-            console.log("comment = " + comment);
-            Array.prototype.filter.call(comment, function(element){
-                element.style.display = "block";
-            })
-            //comments.style.display="block";
-            //window.alert("click");
-            
-        })
-        */
+
     });
+    // Gestion du click pour afficher les commentaires et les notes
+    var clickable = document.getElementsByClassName("clickable");
+    Array.prototype.filter.call(clickable, function(element){
+        var childsCollapse = element.getElementsByClassName("collapse");
+        element.addEventListener("click", function(element){
+            var show = document.getElementsByClassName("showElt");
+            Array.prototype.filter.call(show, function(elt){
+                elt.classList.remove("showElt");
+                var removeColor = elt.parentNode;
+                removeColor.style.backgroundColor = "white";
+            })
+            Array.prototype.filter.call(childsCollapse, function(childsCollapseElt){
+                childsCollapseElt.classList.add("showElt");
+                var addColor = childsCollapseElt.parentNode;
+                addColor.style.backgroundColor = "lightGrey";
+            })
+        })
+    })
     //Recuperation des notes pour calcul de la moyenne
     function moyenne(element) {
         for (var i = 0; i < element.ratings.length; i++) {
@@ -70,13 +78,15 @@ function doList() {
     }
     // recupération et affichage des commentaires
     function comments(element) {
+        div = document.createElement('div');
         for (var i = 0; i < element.ratings.length; i++) {
+            var insertComment = document.createElement("div");
             var stars = element.ratings[i].stars;
             var avis = element.ratings[i].comment;
-            div = document.createElement('div');
-            div.innerHTML = "<p class='comment'>Commentaire N° " + (i+1) + ":  " + avis + "<br/>Note : " + stars + "</p>";
-            //var collapseDiv = document.getElementById("comments");
-            li.appendChild(div);
+            insertComment.innerHTML = "<p class='comment'>Commentaire N° " + (i+1) + ":  " + avis + "<br/>Note : " + stars + "</p>";
+            div.appendChild(insertComment);
         }
+        li.appendChild(div);
+        div.classList.add("collapse");
     }
 }
