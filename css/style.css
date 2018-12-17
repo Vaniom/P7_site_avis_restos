@@ -10,3 +10,17 @@ html, body {
 .content {
     margin-top: 50px;
 }
+#listUL li {
+    display: none;
+    padding : 5px;
+}
+.show {
+    display: block !important;
+}
+.showElt {
+    display: block !important;
+    background-color: lightgrey;
+}
+.hide {
+    display: none !important;
+}
