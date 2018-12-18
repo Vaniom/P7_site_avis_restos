@@ -13,6 +13,12 @@ html, body {
 #listUL li {
     display: none;
     padding : 5px;
+    border-radius: 10px;
+    border: 5px solid #007F31;
+    margin-bottom: 5px;
+}
+#listUL li i {
+    color: #007F31;
 }
 .show {
     display: block !important;
@@ -21,8 +27,9 @@ html, body {
     display: block !important;
 
 }
-.clicked {
-    background-color: lightblue !important;
+.address {
+    font-style: italic;
+    font-size: 0.8rem;
 }
 .hide {
     display: none !important;

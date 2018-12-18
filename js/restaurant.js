@@ -22,20 +22,18 @@ function Restaurant(name, adress, lat, lng) {
         return Number(moy.toFixed(1));
     };
     this.li = document.createElement("li");
-    that.title = document.createElement("h3");
-
+    this.title = document.createElement("h3");
+    this.note = document.createElement("p");
     this.showInfos = function () {//Mise en forme des informations et gestion du clic sur le titre
         var listUL = document.getElementById("listUL");
-        //var li = document.createElement("li");
-        //var that.title = document.createElement("h3");
-        var note = document.createElement("p");
         that.title.textContent = that.name;
-        note.textContent = "Note moy.: " + that.calculateAverage();
+        var grade = that.calculateAverage();
+        console.log("grade = " + grade);
+        that.colorTheStars(grade);
         that.li.appendChild(that.title);
         that.li.id = that.name;
         that.li.classList.add("clickable");
-        that.li.appendChild(note);
-        that.li.appendChild(document.createElement('hr'));
+        that.li.appendChild(that.note);
         listUL.appendChild(that.li);
         if (this.isInRectangle() == true) {
             that.li.classList.add("show");
@@ -43,6 +41,10 @@ function Restaurant(name, adress, lat, lng) {
             that.li.classList.remove("show");
         }
         var div = document.createElement('div');
+        var addressSection = document.createElement('p');
+        addressSection.textContent = that.address;
+        addressSection.classList.add("address");
+        div.appendChild(addressSection);
         for (var i = 0; i < that.ratings.length; i++) {
             var insertComment = document.createElement("div");
             var stars = that.ratings[i].stars;
@@ -73,4 +75,32 @@ function Restaurant(name, adress, lat, lng) {
             return false;
         }
     };
+    this.colorTheStars = function(element){
+        var note = element;
+        var averageStars = document.createElement("p");
+        if ((note >= 0.0) && (note< 0.3)) {
+            averageStars.innerHTML = note + ' <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 0.3) && (note< 0.7)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 0.8) && (note < 1.3)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 1.3) && (note < 1.8)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 1.8) && (note < 2.3)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 2.3) && (note < 2.8)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 2.8) && (note < 3.3)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 3.3) && (note < 3.8)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 3.8) && (note < 4.3)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 4.3) && (note < 4.8)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> ' + that.ratings.length + ' avis';
+        }else if ((note >= 4.8) && (note <= 5.0)){
+            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ' + that.ratings.length + ' avis';
+        }
+        that.note.appendChild(averageStars);
+    }
 }

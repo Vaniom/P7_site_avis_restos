@@ -66,5 +66,13 @@
             "comment":"Menu du jour , entrée plat et dessert à 12,5 euros."
          }
       ]
+   },
+   {
+      "restaurantName":"Chez la mère à Titi",
+      "address":"CRue du Pont, 63430 Pont-du-Château",
+      "lat":45.803352,
+      "long":3.239127,
+      "ratings":[
+      ]
    }
  ]
