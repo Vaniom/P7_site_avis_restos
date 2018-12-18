@@ -19,7 +19,10 @@ html, body {
 }
 .showElt {
     display: block !important;
-    background-color: lightgrey;
+
+}
+.clicked {
+    background-color: lightblue !important;
 }
 .hide {
     display: none !important;
