@@ -1,4 +1,4 @@
-var map, marker, rectangle;
+var map, marker, rectangle, newResto;
 var restoArray = [];
 
 function initMap() {
@@ -73,11 +73,14 @@ function initMap() {
     console.log("liste = " + liste);
     //Recuperation des données de restaurants
     function listUpdate() {
-        restoArray.splice(0, restoArray.length);
+        restoArray.forEach(function(element){// on efface les marqueurs deja présents sur la carte
+            element.marker.setMap(null);
+        })
+        restoArray.splice(0, restoArray.length);// On vide le tableau qui contient les objets
         var div = document.getElementById("listUL");
         div.innerHTML = "";
-        liste.forEach(function(element) {
-            var newResto = new Restaurant(element.restaurantName, element.address, element.lat, element.long);
+        liste.forEach(function(element) {// On boucle sur la liste et on instancie un nouvel objet pour chaque element du tableau
+            newResto = new Restaurant(element.restaurantName, element.address, element.lat, element.long);
             newResto.ratings = element.ratings;
             restoArray.push(newResto);
             var timeoutID = window.setTimeout(newResto.isInRectangle, 1000);

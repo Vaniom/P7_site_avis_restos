@@ -11,7 +11,8 @@ function Restaurant(name, adress, lat, lng) {
         position: that.pos,
         map: map,
         label: that.name,
-        icon: './img/restaurant.png'
+        icon: './img/restaurant.png',
+        animation: null // Attention: à definir au moment de l'instanciation pour prise en compte lors de l'appel de la fonction toggleBounce()
     });
     this.calculateAverage = function() {
         var somme = 0;
@@ -54,16 +55,24 @@ function Restaurant(name, adress, lat, lng) {
         }
         that.li.appendChild(div);
         div.classList.add("collapse");
-        that.title.addEventListener("click", function(){
-            that.li.classList.toggle("clicked");
-            //var collapse = document.getElementsByClassName("collapse");
+        that.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
+            toggleBounce();// On declenche l'animation du marqueur
+            that.li.classList.toggle("clicked");// On permutte la classe sur l'entrée de liste correspondante
             var childNodes = that.li.childNodes;
+            // On affiche les elements attachés
             Array.prototype.filter.call(childNodes, function(element){
                 element.classList.toggle("showElt");
-            })  
+            });
+            function toggleBounce() { // Fonction de rebond du marqueur
+                if (that.marker.getAnimation() !== null) {
+                  that.marker.setAnimation(null);
+                } else if (that.marker.getAnimation() == null) {
+                  that.marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+              }
         });
     };
-    this.isInRectangle = function () {
+    this.isInRectangle = function () {// Verification si le marqueur est contenu dans la portion de carte affichée
         var pointLat = that.pos.lat;
         var pointLng = that.pos.lng;
         var point = new google.maps.LatLng(pointLat, pointLng);
@@ -75,7 +84,7 @@ function Restaurant(name, adress, lat, lng) {
             return false;
         }
     };
-    this.colorTheStars = function(element){
+    this.colorTheStars = function(element){ // Methode pour afficher le système de notation etoiles
         var note = element;
         var averageStars = document.createElement("p");
         if ((note >= 0.0) && (note< 0.3)) {
