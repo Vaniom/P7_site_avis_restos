@@ -75,6 +75,7 @@ function initMap() {
             restoArray.push(newResto);
             var timeoutID = window.setTimeout(newResto.isInRectangle, 1000);
             newResto.showInfos();
+            newResto.clicOnMarker();
         })
     }
 }
