@@ -45,27 +45,17 @@ function initMap() {
     });
 
     // definition d'un polygone aux dimensions de la zone affichée
-    rectangle = new google.maps.Polygon(
-        {
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.0,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.0,
-            map: map
-          }
-    );
-    //on recupere les coordonnées de limite de carte à chaque redimensionnement pour faire varier le rectangle en fonction
+    rectangle = new google.maps.Rectangle();
     map.addListener('bounds_changed', function(){
-        var bds = map.getBounds();
-        var rectangleCoord = [
-            {lat: bds.la.j, lng: bds.ea.j},
-            {lat: bds.la.l, lng: bds.ea.j},
-            {lat: bds.la.l, lng: bds.ea.l},
-            {lat: bds.la.j, lng: bds.ea.l},
-            {lat: bds.la.j, lng: bds.ea.j}
-        ]
-        rectangle.setPath(rectangleCoord);
+        rectangle.setOptions({
+            strokeColor: '#FF0000',
+                strokeOpacity: 0.0,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.0,
+                map: map,
+                bounds: map.getBounds()
+        });
         listUpdate();
         console.log(restoArray);
     })

@@ -29,7 +29,6 @@ function Restaurant(name, adress, lat, lng) {
         var listUL = document.getElementById("listUL");
         that.title.textContent = that.name;
         var grade = that.calculateAverage();
-        console.log("grade = " + grade);
         that.colorTheStars(grade);
         that.li.appendChild(that.title);
         that.li.id = that.name;
@@ -72,18 +71,18 @@ function Restaurant(name, adress, lat, lng) {
               }
         });
     };
-    this.isInRectangle = function () {// Verification si le marqueur est contenu dans la portion de carte affichée
+    this.isInRectangle = function () {
         var pointLat = that.pos.lat;
         var pointLng = that.pos.lng;
         var point = new google.maps.LatLng(pointLat, pointLng);
-        if (google.maps.geometry.poly.containsLocation(point, rectangle)){
-            console.log("IN");
+        if (rectangle.getBounds().contains(point)){
+            console.log(that.name + " IN");
             return true;
         }else {
-            console.log("OUT");
+            console.log(that.name + " OUT");
             return false;
         }
-    };
+    }
     this.colorTheStars = function(element){ // Methode pour afficher le système de notation etoiles
         var note = element;
         var averageStars = document.createElement("p");
