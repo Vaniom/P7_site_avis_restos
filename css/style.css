@@ -34,3 +34,7 @@ html, body {
 .hide {
     display: none !important;
 }
+.streetviewSection {
+    text-align: center;
+    overflow: hidden;
+}

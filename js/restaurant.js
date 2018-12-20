@@ -40,20 +40,24 @@ function Restaurant(name, adress, lat, lng) {
         }else {
             that.li.classList.remove("show");
         }
-        var div = document.createElement('div');
+        var contentDiv = document.createElement('div');
         var addressSection = document.createElement('p');
+        var imgSection = document.createElement('p');
+        imgSection.classList.add("streetviewSection");
+        imgSection.innerHTML = '<img src="' + that.streetviewImage + '" class="streetviewImage" alt="image streetview" />';
         addressSection.textContent = that.address;
         addressSection.classList.add("address");
-        div.appendChild(addressSection);
+        contentDiv.appendChild(addressSection);
+        contentDiv.appendChild(imgSection);
         for (var i = 0; i < that.ratings.length; i++) {
             var insertComment = document.createElement("div");
             var stars = that.ratings[i].stars;
             var avis = that.ratings[i].comment;
             insertComment.innerHTML = "<p class='comment'>Commentaire N° " + (i+1) + ":  " + avis + "<br/>Note : " + stars + "</p>";
-            div.appendChild(insertComment);
+            contentDiv.appendChild(insertComment);
         }
-        that.li.appendChild(div);
-        div.classList.add("collapse");
+        that.li.appendChild(contentDiv);
+        contentDiv.classList.add("collapse");
         that.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
             toggleBounce();// On declenche l'animation du marqueur
             that.li.classList.toggle("clicked");// On permutte la classe sur l'entrée de liste correspondante
@@ -110,5 +114,6 @@ function Restaurant(name, adress, lat, lng) {
             averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ' + that.ratings.length + ' avis';
         }
         that.note.appendChild(averageStars);
-    }
+    };
+    this.streetviewImage = "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" + this.pos.lat + "," + this.pos.lng + "&fov=90&heading=235&pitch=10&key=" + myApiKey;
 }
