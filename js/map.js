@@ -1,4 +1,5 @@
-var map, marker, rectangle;
+var map, marker, rectangle, newResto;
+var restoArray = [];
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -10,7 +11,7 @@ function initMap() {
     });
 
     // Try HTML5 geolocation.
-     
+    
     var pos;
     if (navigator.geolocation) {
         //Recupération des coordonnées de l'utilisateur
@@ -44,64 +45,36 @@ function initMap() {
     });
 
     // definition d'un polygone aux dimensions de la zone affichée
-    rectangle = new google.maps.Polygon(
-        {
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.0,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.0,
-            map: map
-          }
-    );
-    //on recupere les coordonnées de limite de carte à chaque redimensionnement pour faire varier le rectangle en fonction
+    rectangle = new google.maps.Rectangle();
     map.addListener('bounds_changed', function(){
-        var bds = map.getBounds();
-        var rectangleCoord = [
-            {lat: bds.la.j, lng: bds.ea.j},
-            {lat: bds.la.l, lng: bds.ea.j},
-            {lat: bds.la.l, lng: bds.ea.l},
-            {lat: bds.la.j, lng: bds.ea.l},
-            {lat: bds.la.j, lng: bds.ea.j}
-        ]
-        rectangle.setPath(rectangleCoord);
+        rectangle.setOptions({
+            strokeColor: '#FF0000',
+                strokeOpacity: 0.0,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.0,
+                map: map,
+                bounds: map.getBounds()
+        });
         listUpdate();
+        console.log(restoArray);
     })
 
     console.log("liste = " + liste);
     //Recuperation des données de restaurants
     function listUpdate() {
-        liste.forEach(function(element) {
-            var restoPos = {
-                lat: element.lat,
-                lng: element.long
-            };
-            var restoName = element.restaurantName;
-            //Placement d'un marqueur pour chaque resto
-            var restoMarker = new google.maps.Marker({
-                position: restoPos,
-                map: map,
-                label: restoName,
-                icon: './img/restaurant.png'
-            });
-            //On verifie pour chaque resto s'il est dans la zone d'affcihage ou non, et on actualise l'affichage de la liste en fonction
-            function isInRectangle(){
-                var pointLat = element.lat;
-                var pointLng = element.long;
-                var point = new google.maps.LatLng(pointLat, pointLng);
-                console.log("point = " + point);
-                if (google.maps.geometry.poly.containsLocation(point, rectangle)){
-                    console.log("IN");
-                    var elm = document.getElementById(restoName);
-                    console.log("restoname = " + restoName);
-                    elm.classList.add("show");
-                }else {
-                    console.log("OUT");
-                    var elm = document.getElementById(restoName);
-                    elm.classList.remove("show");
-                }
-            }
-            var timeoutID = window.setTimeout(isInRectangle, 1000);     
+        restoArray.forEach(function(element){// on efface les marqueurs deja présents sur la carte
+            element.marker.setMap(null);
+        })
+        restoArray.splice(0, restoArray.length);// On vide le tableau qui contient les objets
+        var div = document.getElementById("listUL");
+        div.innerHTML = "";
+        liste.forEach(function(element) {// On boucle sur la liste et on instancie un nouvel objet pour chaque element du tableau
+            newResto = new Restaurant(element.restaurantName, element.address, element.lat, element.long);
+            newResto.ratings = element.ratings;
+            restoArray.push(newResto);
+            var timeoutID = window.setTimeout(newResto.isInRectangle, 1000);
+            newResto.showInfos();
         })
     }
 }
