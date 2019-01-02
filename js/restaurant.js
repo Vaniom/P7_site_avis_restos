@@ -101,29 +101,50 @@ function Restaurant(name, adress, lat, lng) {
     this.colorTheStars = function(element, insertIn){ // Methode pour afficher le système de notation etoiles
         var note = element;
         var averageStars = document.createElement("p");
-        if ((note >= 0.0) && (note< 0.3)) {
-            averageStars.innerHTML = note + ' <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 0.3) && (note< 0.7)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 0.8) && (note < 1.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 1.3) && (note < 1.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 1.8) && (note < 2.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 2.3) && (note < 2.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 2.8) && (note < 3.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 3.3) && (note < 3.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 3.8) && (note < 4.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 4.3) && (note < 4.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 4.8) && (note <= 5.0)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ' + that.ratings.length + ' avis';
+        var arrondi = Math.round (note);
+        var reste = arrondi - note;
+        var fullStars, halfStars, iFull, iHalf;
+        if ((reste <= -0.3) && (reste >= -0.4)) {
+            fullStars = arrondi;
+            halfStars = 1;
+        }else if ((reste <= 0.5) && (reste >= 0.3)) {
+            fullStars = arrondi - 1;
+            halfStars = 1;
+        } else {
+            fullStars = arrondi;
+            halfStars = 0;
         }
+        if (note >= 0) {
+            var span = document.createElement("span"); 
+            span.textContent = note + " ";
+            averageStars.appendChild(span);
+        }else {}
+        for (var i = 0; i < fullStars; i++) {
+            iFull = document.createElement("i");
+            iFull.classList.add("fas");
+            iFull.classList.add("fa-star");
+            averageStars.appendChild(iFull);
+        }
+        for (var j = 0; j < halfStars; j++) {
+            iHalf = document.createElement("i");
+            iHalf.classList.add("fas");
+            iHalf.classList.add("fa-star-half-alt");
+            averageStars.appendChild(iHalf); 
+        }
+        var noStars = 5 - (fullStars + halfStars);
+        for (var k = 0; k < noStars; k++){
+            noStars = document.createElement("i");
+            noStars.classList.add("far");
+            noStars.classList.add("fa-star");
+            averageStars.appendChild(noStars);
+        }
+        var nbAvis = document.createElement("span");
+        if (that.ratings.length > 0){
+            nbAvis.textContent = " " + that.ratings.length + " avis.";
+        }else {
+            nbAvis.textContent = "Aucun avis publié.";
+        }
+        averageStars.appendChild(nbAvis);
         insertIn.appendChild(averageStars);
     };
     this.streetviewImage = "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" + this.pos.lat + "," + this.pos.lng + "&fov=90&heading=235&pitch=10&key=" + myApiKey;
