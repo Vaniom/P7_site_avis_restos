@@ -136,4 +136,5 @@ function Restaurant(name, adress, lat, lng) {
             }); 
         })
     };
+    this.filter = "show";
 }

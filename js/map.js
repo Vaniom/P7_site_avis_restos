@@ -47,6 +47,8 @@ function initMap() {
     // definition d'un polygone aux dimensions de la zone affichée
     rectangle = new google.maps.Rectangle();
     map.addListener('bounds_changed', function(){
+        let my_range = $(".js-range-slider").data("ionRangeSlider"); //stockage de l'instance du slider ds une variable
+        my_range.reset();// reset des données du slider aux données initiales
         rectangle.setOptions({
             strokeColor: '#FF0000',
                 strokeOpacity: 0.0,
