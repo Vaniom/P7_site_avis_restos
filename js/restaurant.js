@@ -59,21 +59,32 @@ function Restaurant(name, adress, lat, lng) {
         that.li.appendChild(contentDiv);
         contentDiv.classList.add("collapse");
         that.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
-            toggleBounce();// On declenche l'animation du marqueur
+        for (var i = 0; i < restoArray.length; i++) {
+            if (restoArray[i].name != that.name) {
+                restoArray[i].li.classList.remove("clicked");
+                restoArray[i].marker.setAnimation(null);                
+                var children = restoArray[i].li.childNodes;
+                Array.prototype.filter.call(children, function(element){
+                    element.classList.remove("showElt");
+                })             
+            } else {}
+        }
+            that.toggleBounce();// On declenche l'animation du marqueur
             that.li.classList.toggle("clicked");// On permutte la classe sur l'entrée de liste correspondante
+            //that.detailed = true;
             var childNodes = that.li.childNodes;
             // On affiche les elements attachés
             Array.prototype.filter.call(childNodes, function(element){
                 element.classList.toggle("showElt");
             });
-            function toggleBounce() { // Fonction de rebond du marqueur
-                if (that.marker.getAnimation() !== null) {
-                  that.marker.setAnimation(null);
-                } else if (that.marker.getAnimation() == null) {
-                  that.marker.setAnimation(google.maps.Animation.BOUNCE);
-                }
-              }
         });
+    };
+    this.toggleBounce = function () { // gestion de l'animation du marqueur
+        if (that.marker.getAnimation() !== null) {
+            that.marker.setAnimation(null);
+          } else if (that.marker.getAnimation() == null) {
+            that.marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
     };
     this.isInRectangle = function () {
         var pointLat = that.pos.lat;
@@ -86,7 +97,7 @@ function Restaurant(name, adress, lat, lng) {
             console.log(that.name + " OUT");
             return false;
         }
-    }
+    };
     this.colorTheStars = function(element, insertIn){ // Methode pour afficher le système de notation etoiles
         var note = element;
         var averageStars = document.createElement("p");
