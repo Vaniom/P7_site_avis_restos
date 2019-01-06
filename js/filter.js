@@ -11,6 +11,7 @@ $(function () {
         onChange: function (data)  {
             console.log(data.from);
             console.log(data.to);
+            var restoArray = myLayout.restoArray;
             console.log(restoArray);
             for (var i = 0; i < restoArray.length; i++)  {
                 var moy = restoArray[i].calculateAverage();

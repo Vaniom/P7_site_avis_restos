@@ -58,6 +58,7 @@ function Restaurant(name, adress, lat, lng) {
         }
         that.li.appendChild(contentDiv);
         contentDiv.classList.add("collapse");
+        var restoArray = myLayout.restoArray;
         that.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
         for (var i = 0; i < restoArray.length; i++) {
             if (restoArray[i].name != that.name) {
