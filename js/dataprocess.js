@@ -21,6 +21,9 @@ function executerRequete() {
         xhr.open("GET", url, true);
         xhr.send(null);
     } else {
-    }    
+    };
+    myLayout.userCreated.forEach(function(element){
+        liste.push(element);
+    }) 
 }
 executerRequete();

@@ -45,3 +45,8 @@ html, body {
     text-align: center;
     overflow: hidden;
 }
+form input{
+    background-color: #aaa !important;
+    margin-top: 1em !important;
+    margin-bottom: 1em !important;
+}

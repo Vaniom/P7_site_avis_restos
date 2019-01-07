@@ -2,6 +2,7 @@ function Layout(name) {
     var self = this;
     this.name = name;
     this.restoArray = [];
+    this.userCreated = [];
     this.map = map;
     this.init = function(){
         map = new google.maps.Map(document.getElementById('map'), {
@@ -11,7 +12,6 @@ function Layout(name) {
             },
             zoom: 6
         });
-    
         // Try HTML5 geolocation.
         
         var pos;
@@ -45,7 +45,6 @@ function Layout(name) {
             map: map,
             icon: './img/user_marker.png'
         });
-    
         // definition d'un polygone aux dimensions de la zone affichée
         rectangle = new google.maps.Rectangle();
         map.addListener('bounds_changed', function(){
@@ -60,20 +59,28 @@ function Layout(name) {
                     map: map,
                     bounds: map.getBounds()
             });
-            listUpdate();
+            self.listUpdate();
             console.log(self.restoArray);
+        })
+        var listener1 = rectangle.addListener("click", function(event){
+            self.addRestaurant(event.latLng, map, listener1);
         })
     
         console.log("liste = " + liste);
-        //Recuperation des données de restaurants
-        function listUpdate() {
-            var restoArray = self.restoArray;
+    };
+    this.listUpdate = function(){
+        var restoArray = self.restoArray;
+        var userCreated = self.userCreated;
             restoArray.forEach(function(element){// on efface les marqueurs deja présents sur la carte
                 element.marker.setMap(null);
             })
             restoArray.splice(0, restoArray.length);// On vide le tableau qui contient les objets
             var div = document.getElementById("listUL");
             div.innerHTML = "";
+            userCreated.forEach(function(element){
+                liste.push(element);
+            })
+            userCreated.splice(0, userCreated.length);
             liste.forEach(function(element) {// On boucle sur la liste et on instancie un nouvel objet pour chaque element du tableau
                 newResto = new Restaurant(element.restaurantName, element.address, element.lat, element.long);
                 newResto.ratings = element.ratings;
@@ -82,6 +89,47 @@ function Layout(name) {
                 newResto.showInfos();
                 newResto.clicOnMarker();
             })
-        }
     }
+    this.addRestaurant = function(latLng, map, listener){ 
+        var infoContent = document.createElement('div');
+        var question = document.createElement('p');
+        question.textContent = 'Placer un nouveau restaurant ici ?';
+        infoContent.appendChild(question);
+        var validButton = document.createElement('button');
+        validButton.textContent = 'Créer !';
+        validButton.classList.add('btn');
+        validButton.id = 'validButton';
+        validButton.classList.add('btn-primary');
+        infoContent.appendChild(validButton);
+        creationSection = document.createElement('div');
+        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' required /><br /><input type='text' placeholder='adresse' id='address' /><br /><button type='button' id='submitButton' class='btn btn-success'>Valider</button></form>";
+        creationSection.style.display = 'none';
+        infoContent.appendChild(creationSection);
+        var listener2 = validButton.addEventListener("click", function(){
+          creationSection.style.display = 'block';
+          var submitButton = document.getElementById('submitButton');
+          submitButton.addEventListener('click', function(){
+            var resto = {
+                restaurantName: document.getElementById('name').value,
+                adress: document.getElementById('address').value,
+                lat: latLng.lat(),
+                long: latLng.lng(),
+                ratings: []
+            };
+            self.userCreated.push(resto);
+            console.log('resto = ' + resto);
+            console.log('liste = ' + liste);
+            self.listUpdate();
+            infoWindow.close();
+          })
+        })
+          var infoWindow = new google.maps.InfoWindow({
+            maxWidth: 300,
+            position: latLng,
+            map: map,
+            content: infoContent
+        });
+        map.panTo(latLng);
+        map.setZoom(15);
+    };
 }
