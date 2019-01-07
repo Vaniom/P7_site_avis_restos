@@ -26,9 +26,22 @@
         </script>
     </head>
     <body>
+        <header>
+            <h1>
+            <span id="avis">Avis </span><span id="resto">Resto</span>
+            </h1>
+            <div id="line1"></div>
+            <div id="line2"></div>
+            <div id="line3"></div>
+        </header>
         <div class="container">
             <div class="content row">
-                <div id="map" class="col-md-6">
+                <div class="col-md-6">
+                    <div id="map">
+                    </div>
+                    <div id="legende">
+                        <p><strong>Cliquer sur la carte pour ajouter un restaurant.</strong></p>
+                    </div>
                 </div>
                 <div id="list" class="col-md-6">
                     <p>Filtrer les résultats par nombre d'étoiles :</p>
@@ -38,6 +51,35 @@
                 </div>
             </div>
         </div>
+        <!--Modal-->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Je donne mon avis</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <p>Donnez une note au restaurant <strong><span id="nameHere"></span></strong><br />
+                                <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            </p>
+                            <label for="commentaire">Ecrivez votre commentaire : </label>
+                            <textarea class="form-control" id="commentaire" rows="5" required></textarea>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <footer>
+            <p id="copyright">©2018 <a href="http://www.florentpia.net" target="blank">Florent Pianet</a></p>
+        </footer>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

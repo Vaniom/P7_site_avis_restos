@@ -48,7 +48,7 @@ function Layout(name) {
         // definition d'un polygone aux dimensions de la zone affichée
         rectangle = new google.maps.Rectangle();
         map.addListener('bounds_changed', function(){
-            let my_range = $(".js-range-slider").data("ionRangeSlider"); //stockage de l'instance du slider ds une variable
+            var my_range = $(".js-range-slider").data("ionRangeSlider"); //stockage de l'instance du slider ds une variable
             my_range.reset();// reset des données du slider aux données initiales
             rectangle.setOptions({
                 strokeColor: '#FF0000',
@@ -61,10 +61,10 @@ function Layout(name) {
             });
             self.listUpdate();
             console.log(self.restoArray);
-        })
+        });
         var listener1 = rectangle.addListener("click", function(event){
             self.addRestaurant(event.latLng, map, listener1);
-        })
+        });
     
         console.log("liste = " + liste);
     };
@@ -73,13 +73,13 @@ function Layout(name) {
         var userCreated = self.userCreated;
             restoArray.forEach(function(element){// on efface les marqueurs deja présents sur la carte
                 element.marker.setMap(null);
-            })
+            });
             restoArray.splice(0, restoArray.length);// On vide le tableau qui contient les objets
             var div = document.getElementById("listUL");
             div.innerHTML = "";
             userCreated.forEach(function(element){
                 liste.push(element);
-            })
+            });
             userCreated.splice(0, userCreated.length);
             liste.forEach(function(element) {// On boucle sur la liste et on instancie un nouvel objet pour chaque element du tableau
                 newResto = new Restaurant(element.restaurantName, element.address, element.lat, element.long);
@@ -88,21 +88,22 @@ function Layout(name) {
                 var timeoutID = window.setTimeout(newResto.isInRectangle, 1000);
                 newResto.showInfos();
                 newResto.clicOnMarker();
-            })
-    }
+            });
+    };
     this.addRestaurant = function(latLng, map, listener){ 
         var infoContent = document.createElement('div');
         var question = document.createElement('p');
-        question.textContent = 'Placer un nouveau restaurant ici ?';
+        question.textContent = 'Ajouter un nouveau restaurant ici ?';
         infoContent.appendChild(question);
         var validButton = document.createElement('button');
-        validButton.textContent = 'Créer !';
+        validButton.textContent = 'Ajouter !';
         validButton.classList.add('btn');
         validButton.id = 'validButton';
         validButton.classList.add('btn-primary');
+        validButton.classList.add('btn-sm');
         infoContent.appendChild(validButton);
         creationSection = document.createElement('div');
-        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' required /><br /><input type='text' placeholder='adresse' id='address' /><br /><button type='button' id='submitButton' class='btn btn-success'>Valider</button></form>";
+        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' required /><br /><input type='text' placeholder='adresse' id='address' class='form-control' /><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
         creationSection.style.display = 'none';
         infoContent.appendChild(creationSection);
         var listener2 = validButton.addEventListener("click", function(){
@@ -121,8 +122,8 @@ function Layout(name) {
             console.log('liste = ' + liste);
             self.listUpdate();
             infoWindow.close();
-          })
-        })
+          });
+        });
           var infoWindow = new google.maps.InfoWindow({
             maxWidth: 300,
             position: latLng,

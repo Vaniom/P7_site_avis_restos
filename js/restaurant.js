@@ -3,8 +3,8 @@ function Restaurant(name, adress, lat, lng) {
     this.name = name;
     this.address = adress;
     this.pos = {
-        lat,
-        lng
+        lat: lat,
+        lng: lng
     };
     this.ratings = "";
     this.marker = new google.maps.Marker({
@@ -33,6 +33,13 @@ function Restaurant(name, adress, lat, lng) {
         that.li.appendChild(that.title);
         that.li.id = that.name;
         that.li.classList.add("clickable");
+        var voteBtn = document.createElement('div');
+        voteBtn.innerHTML = "<button type='button' id='avisBtn' class='btn btn-outline-primary btn-sm voteBtn' data-toggle='modal' data-target='#exampleModalCenter'>Je donne mon avis</button>";
+        voteBtn.addEventListener("click", function(){
+            document.getElementById("nameHere").textContent = that.name;
+        });
+        
+        that.li.appendChild(voteBtn);
         that.li.appendChild(that.note);
         listUL.appendChild(that.li);
         if (this.isInRectangle() == true) {
@@ -67,7 +74,7 @@ function Restaurant(name, adress, lat, lng) {
                 var children = restoArray[i].li.childNodes;
                 Array.prototype.filter.call(children, function(element){
                     element.classList.remove("showElt");
-                })             
+                });    
             } else {}
         }
             that.toggleBounce();// On declenche l'animation du marqueur
@@ -167,7 +174,7 @@ function Restaurant(name, adress, lat, lng) {
                 map: map,
                 content: infoContent
             }); 
-        })
+        });
     };
     this.filter = "show";
 }

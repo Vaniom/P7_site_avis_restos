@@ -15,15 +15,12 @@ function executerRequete() {
                 // on lance la fonction de callback avec la liste récupérée
                 //doList();
             }
-        }
+        };
         // la requête AJAX : lecture de resto_data.json
         var url = "resto_data.json";
         xhr.open("GET", url, true);
         xhr.send(null);
     } else {
-    };
-    myLayout.userCreated.forEach(function(element){
-        liste.push(element);
-    }) 
+    }
 }
 executerRequete();
