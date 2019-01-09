@@ -47,6 +47,8 @@ function initMap() {
     // definition d'un polygone aux dimensions de la zone affichée
     rectangle = new google.maps.Rectangle();
     map.addListener('bounds_changed', function(){
+        var my_range = $(".js-range-slider").data("ionRangeSlider"); //stockage de l'instance du slider ds une variable
+        my_range.reset();// reset des données du slider aux données initiales
         rectangle.setOptions({
             strokeColor: '#FF0000',
                 strokeOpacity: 0.0,
@@ -58,14 +60,14 @@ function initMap() {
         });
         listUpdate();
         console.log(restoArray);
-    })
+    });
 
     console.log("liste = " + liste);
     //Recuperation des données de restaurants
     function listUpdate() {
         restoArray.forEach(function(element){// on efface les marqueurs deja présents sur la carte
             element.marker.setMap(null);
-        })
+        });
         restoArray.splice(0, restoArray.length);// On vide le tableau qui contient les objets
         var div = document.getElementById("listUL");
         div.innerHTML = "";
@@ -75,6 +77,7 @@ function initMap() {
             restoArray.push(newResto);
             var timeoutID = window.setTimeout(newResto.isInRectangle, 1000);
             newResto.showInfos();
-        })
+            newResto.clicOnMarker();
+        });
     }
 }

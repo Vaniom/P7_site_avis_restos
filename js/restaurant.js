@@ -3,14 +3,14 @@ function Restaurant(name, adress, lat, lng) {
     this.name = name;
     this.address = adress;
     this.pos = {
-        lat,
-        lng
+        lat: lat,
+        lng: lng
     };
     this.ratings = "";
     this.marker = new google.maps.Marker({
         position: that.pos,
         map: map,
-        label: that.name,
+        title: that.name,
         icon: './img/restaurant.png',
         animation: null // Attention: à definir au moment de l'instanciation pour prise en compte lors de l'appel de la fonction toggleBounce()
     });
@@ -29,10 +29,17 @@ function Restaurant(name, adress, lat, lng) {
         var listUL = document.getElementById("listUL");
         that.title.textContent = that.name;
         var grade = that.calculateAverage();
-        that.colorTheStars(grade);
+        that.colorTheStars(grade, that.note);
         that.li.appendChild(that.title);
         that.li.id = that.name;
         that.li.classList.add("clickable");
+        var voteBtn = document.createElement('div');
+        voteBtn.innerHTML = "<button type='button' id='avisBtn' class='btn btn-outline-primary btn-sm voteBtn' data-toggle='modal' data-target='#exampleModalCenter'>Je donne mon avis</button>";
+        voteBtn.addEventListener("click", function(){
+            document.getElementById("nameHere").textContent = that.name;
+        });
+        
+        that.li.appendChild(voteBtn);
         that.li.appendChild(that.note);
         listUL.appendChild(that.li);
         if (this.isInRectangle() == true) {
@@ -40,36 +47,52 @@ function Restaurant(name, adress, lat, lng) {
         }else {
             that.li.classList.remove("show");
         }
-        var div = document.createElement('div');
+        var contentDiv = document.createElement('div');
         var addressSection = document.createElement('p');
+        var imgSection = document.createElement('p');
+        imgSection.classList.add("streetviewSection");
+        imgSection.innerHTML = '<img src="' + that.streetviewImage + '" class="streetviewImage" alt="image streetview" />';
         addressSection.textContent = that.address;
         addressSection.classList.add("address");
-        div.appendChild(addressSection);
+        contentDiv.appendChild(addressSection);
+        contentDiv.appendChild(imgSection);
         for (var i = 0; i < that.ratings.length; i++) {
             var insertComment = document.createElement("div");
             var stars = that.ratings[i].stars;
             var avis = that.ratings[i].comment;
             insertComment.innerHTML = "<p class='comment'>Commentaire N° " + (i+1) + ":  " + avis + "<br/>Note : " + stars + "</p>";
-            div.appendChild(insertComment);
+            contentDiv.appendChild(insertComment);
         }
-        that.li.appendChild(div);
-        div.classList.add("collapse");
+        that.li.appendChild(contentDiv);
+        contentDiv.classList.add("collapse");
+        var restoArray = myLayout.restoArray;
         that.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
-            toggleBounce();// On declenche l'animation du marqueur
+        for (var i = 0; i < restoArray.length; i++) {
+            if (restoArray[i].name != that.name) {
+                restoArray[i].li.classList.remove("clicked");
+                restoArray[i].marker.setAnimation(null);                
+                var children = restoArray[i].li.childNodes;
+                Array.prototype.filter.call(children, function(element){
+                    element.classList.remove("showElt");
+                });    
+            } else {}
+        }
+            that.toggleBounce();// On declenche l'animation du marqueur
             that.li.classList.toggle("clicked");// On permutte la classe sur l'entrée de liste correspondante
+            //that.detailed = true;
             var childNodes = that.li.childNodes;
             // On affiche les elements attachés
             Array.prototype.filter.call(childNodes, function(element){
                 element.classList.toggle("showElt");
             });
-            function toggleBounce() { // Fonction de rebond du marqueur
-                if (that.marker.getAnimation() !== null) {
-                  that.marker.setAnimation(null);
-                } else if (that.marker.getAnimation() == null) {
-                  that.marker.setAnimation(google.maps.Animation.BOUNCE);
-                }
-              }
         });
+    };
+    this.toggleBounce = function () { // gestion de l'animation du marqueur
+        if (that.marker.getAnimation() !== null) {
+            that.marker.setAnimation(null);
+          } else if (that.marker.getAnimation() == null) {
+            that.marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
     };
     this.isInRectangle = function () {
         var pointLat = that.pos.lat;
@@ -82,33 +105,76 @@ function Restaurant(name, adress, lat, lng) {
             console.log(that.name + " OUT");
             return false;
         }
-    }
-    this.colorTheStars = function(element){ // Methode pour afficher le système de notation etoiles
+    };
+    this.colorTheStars = function(element, insertIn){ // Methode pour afficher le système de notation etoiles
         var note = element;
         var averageStars = document.createElement("p");
-        if ((note >= 0.0) && (note< 0.3)) {
-            averageStars.innerHTML = note + ' <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 0.3) && (note< 0.7)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 0.8) && (note < 1.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 1.3) && (note < 1.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 1.8) && (note < 2.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 2.3) && (note < 2.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 2.8) && (note < 3.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 3.3) && (note < 3.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 3.8) && (note < 4.3)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 4.3) && (note < 4.8)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> ' + that.ratings.length + ' avis';
-        }else if ((note >= 4.8) && (note <= 5.0)){
-            averageStars.innerHTML = note + ' <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ' + that.ratings.length + ' avis';
+        var arrondi = Math.round (note);
+        var reste = arrondi - note;
+        var fullStars, halfStars, iFull, iHalf;
+        if ((reste <= -0.3) && (reste >= -0.4)) {
+            fullStars = arrondi;
+            halfStars = 1;
+        }else if ((reste <= 0.5) && (reste >= 0.3)) {
+            fullStars = arrondi - 1;
+            halfStars = 1;
+        } else {
+            fullStars = arrondi;
+            halfStars = 0;
         }
-        that.note.appendChild(averageStars);
-    }
+        if (note >= 0) {
+            var span = document.createElement("span"); 
+            span.textContent = note + " ";
+            averageStars.appendChild(span);
+        }else {}
+        for (var i = 0; i < fullStars; i++) {
+            iFull = document.createElement("i");
+            iFull.classList.add("fas");
+            iFull.classList.add("fa-star");
+            averageStars.appendChild(iFull);
+        }
+        for (var j = 0; j < halfStars; j++) {
+            iHalf = document.createElement("i");
+            iHalf.classList.add("fas");
+            iHalf.classList.add("fa-star-half-alt");
+            averageStars.appendChild(iHalf); 
+        }
+        var noStars = 5 - (fullStars + halfStars);
+        for (var k = 0; k < noStars; k++){
+            noStars = document.createElement("i");
+            noStars.classList.add("far");
+            noStars.classList.add("fa-star");
+            averageStars.appendChild(noStars);
+        }
+        var nbAvis = document.createElement("span");
+        if (that.ratings.length > 0){
+            nbAvis.textContent = " " + that.ratings.length + " avis.";
+        }else {
+            nbAvis.textContent = "Aucun avis publié.";
+        }
+        averageStars.appendChild(nbAvis);
+        insertIn.appendChild(averageStars);
+    };
+    this.streetviewImage = "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" + this.pos.lat + "," + this.pos.lng + "&fov=90&heading=235&pitch=10&key=" + myApiKey;
+    this.clicOnMarker = function () {
+        var infoContent = document.createElement("div");
+        var infoMoyenne = document.createElement("p");
+        var grade = that.calculateAverage();
+        var infoTitle = document.createElement("h3");
+        var infoStreetview = document.createElement("p");
+        infoTitle.textContent = that.name;
+        infoContent.appendChild(infoTitle);
+        infoStreetview.innerHTML = '<img src="' + that.streetviewImage + '" class="streetviewImage" alt="image streetview" />';         
+        infoMoyenne.textContent = that.ratings.length + " avis " + that.colorTheStars(grade, infoContent);
+        infoContent.appendChild(infoStreetview);
+        that.marker.addListener("click", function(){
+            var infoWindow = new google.maps.InfoWindow({
+                maxWidth: 300,
+                position: that.pos,
+                map: map,
+                content: infoContent
+            }); 
+        });
+    };
+    this.filter = "show";
 }
