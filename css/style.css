@@ -108,3 +108,26 @@ form input{
 .creationForm {
     margin-top: 5px !important;
 }
+.rating a {
+    color: #aaa;
+    text-decoration: none !important;
+    font-size: 2em;
+    transition: color .4s;
+ }
+ .rating a:hover,
+ .rating a:focus {
+    color: orange;
+    cursor: pointer;
+ }
+.rating a:hover ~ a,
+.rating a:focus ~ a {
+   color: orange;
+}
+.rating a {
+    float: right;
+ }
+ .rating {
+     width: 100%;
+     height: 4em;
+     padding-right: 35%;
+ }
