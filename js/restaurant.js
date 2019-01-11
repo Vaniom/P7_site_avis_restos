@@ -14,18 +14,27 @@ function Restaurant(name, adress, lat, lng) {
         icon: './img/restaurant.png',
         animation: null // Attention: à definir au moment de l'instanciation pour prise en compte lors de l'appel de la fonction toggleBounce()
     });
-    this.calculateAverage = function() {
+    this.average = "";
+    this.id = "";
+    this.hasToGetDetails = false;
+    this.calculateAverage = function () {
         var somme = 0;
-        for (var i = 0; i < self.ratings.length; i++) {
-            somme = self.ratings[i].stars + parseInt(somme);
-        }
-        var moy = somme / (self.ratings.length);
-        return Number(moy.toFixed(1));
+        if (self.average !== undefined){
+            return self.average;
+        }else {
+            for (var i = 0; i < self.ratings.length; i++) {
+                somme = self.ratings[i].stars + parseInt(somme);
+            }
+            var moy = somme / (self.ratings.length);
+            return Number(moy.toFixed(1));
+        }       
     };
     this.li = document.createElement("li");
     this.title = document.createElement("h3");
     this.note = document.createElement("p");
     this.voteBtn = document.createElement('div');
+    this.contentDiv = document.createElement('div');
+    this.formDiv = document.createElement('div');
     this.showInfos = function () {//Mise en forme des informations et gestion du clic sur le titre
         var listUL = document.getElementById("listUL");
         self.title.textContent = self.name;
@@ -34,13 +43,12 @@ function Restaurant(name, adress, lat, lng) {
         self.li.appendChild(self.title);
         self.li.id = self.name;
         self.li.classList.add("clickable");
-        //var voteBtn = document.createElement('div');
         self.voteBtn.id = 'voteBtn';
         self.voteBtn.innerHTML = "<button type='button' id='avisBtn' class='btn btn-outline-primary btn-sm voteBtn'>Je donne mon avis</button>";
-        self.li.appendChild(self.voteBtn);
+        self.formDiv.appendChild(self.voteBtn);
         var listener1 = self.voteBtn.addEventListener("click", function(){
-            self.voteBtn.classList.add('hide');
-            self.constructModal();
+            self.voteBtn.classList.add('hideBtn');
+            self.constructForm();
             self.vote();
         });
         self.li.appendChild(self.note);
@@ -50,26 +58,34 @@ function Restaurant(name, adress, lat, lng) {
         }else {
             self.li.classList.remove("show");
         }
-        var contentDiv = document.createElement('div');
+        var contentDiv = self.contentDiv;
         var addressSection = document.createElement('p');
         var imgSection = document.createElement('p');
         imgSection.classList.add("streetviewSection");
-        imgSection.innerHTML = '<img src="' + self.streetviewImage + '" class="streetviewImage" alt="image streetview" />';
-        addressSection.textContent = self.address;
-        addressSection.classList.add("address");
-        contentDiv.appendChild(addressSection);
-        contentDiv.appendChild(imgSection);
-        for (var i = 0; i < self.ratings.length; i++) {
-            var insertComment = document.createElement("div");
-            var stars = self.ratings[i].stars;
-            var avis = self.ratings[i].comment;
-            insertComment.innerHTML = "<p class='comment'>Commentaire N° " + (i+1) + ":  " + avis + "<br/>Note : " + stars + "</p>";
-            contentDiv.appendChild(insertComment);
-        }
+        
         self.li.appendChild(contentDiv);
         contentDiv.classList.add("collapse");
         var restoArray = myLayout.restoArray;
         self.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
+        setTimeout(showNext, 100);
+        function showNext () {
+            contentDiv.innerHTML = '';
+            addressSection.textContent = self.address;
+            imgSection.innerHTML = '<img src="' + self.streetviewImage + '" class="streetviewImage" alt="image streetview" />';
+            contentDiv.appendChild(imgSection);
+            addressSection.classList.add("address");
+            contentDiv.appendChild(addressSection);
+            contentDiv.appendChild(self.formDiv);
+        
+            for (var j = 0; j < self.ratings.length; j++) {
+                var insertComment = document.createElement("div");
+                var stars = self.ratings[j].stars;
+                var avis = self.ratings[j].comment;
+                insertComment.innerHTML = "<p class='comment'><span class='avis'>Avis N° " + (j+1) + ":  </span>" + avis + "<br/><span class='note'>Note : " + stars + "</span></p>";
+                contentDiv.appendChild(insertComment);
+            }
+        }
+
         for (var i = 0; i < restoArray.length; i++) {
             if (restoArray[i].name != self.name) {
                 restoArray[i].li.classList.remove("clicked");
@@ -101,10 +117,8 @@ function Restaurant(name, adress, lat, lng) {
         var pointLng = self.pos.lng;
         var point = new google.maps.LatLng(pointLat, pointLng);
         if (rectangle.getBounds().contains(point)){
-            console.log(self.name + " IN");
             return true;
         }else {
-            console.log(self.name + " OUT");
             return false;
         }
     };
@@ -158,6 +172,7 @@ function Restaurant(name, adress, lat, lng) {
         insertIn.appendChild(averageStars);
     };
     this.streetviewImage = "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" + this.pos.lat + "," + this.pos.lng + "&fov=90&heading=235&pitch=10&key=" + myApiKey;
+
     this.clicOnMarker = function () {
         var infoContent = document.createElement("div");
         var infoMoyenne = document.createElement("p");
@@ -179,33 +194,35 @@ function Restaurant(name, adress, lat, lng) {
         });
     };
     this.userComment = "";
-    this.constructModal = function(listener){
+
+    this.constructForm = function(listener){
         var formDiv = document.createElement('div');
-        formDiv.innerHTML = '<div id="voteForm"><form class="modal-form"><p>Evaluez :<br /><div class="rating"><i id="note1" class="vote far fa-star"></i><i id="note2" class="vote far fa-star"></i><i id="note3" class="vote far fa-star"></i><i id="note4" class="vote far fa-star"></i><i id="note5" class="vote far fa-star"></i></div></p><label for="commentaire">Commentez :</label><textarea class="form-control" id="commentaire" rows="5" required></textarea></form><button type="submit" id="saveBtn" class="btn btn-primary">Envoyer</button><button type="button" id="closeBtn" class="btn btn-secondary">Fermer</button></div>';
-        $(self.li).append(formDiv);
+        formDiv.innerHTML = '<div id="voteForm"><form><p>Donnez une note :<br /><div class="rating"><i id="note1" class="vote far fa-star"></i><i id="note2" class="vote far fa-star"></i><i id="note3" class="vote far fa-star"></i><i id="note4" class="vote far fa-star"></i><i id="note5" class="vote far fa-star"></i></div></p><label for="commentaire">Votre commentaire :</label><textarea class="form-control" id="commentaire" rows="5" required></textarea></form><button type="submit" id="saveBtn" class="btn btn-primary">Envoyer</button><button type="button" id="closeBtn" class="btn btn-secondary">Fermer</button></div>';
+        $(self.formDiv).append(formDiv);
         var saveBtn = document.getElementById('saveBtn');
         var closeBtn = document.getElementById('closeBtn');
-        saveBtn.addEventListener('click', function(){
+        saveBtn.addEventListener('click', function(e){
+            e.preventDefault();
             self.userComment = document.getElementById('commentaire').value;
-            console.log('commentaire = ' + self.userComment + ' / note = ' + self.userNote);
+            //console.log('commentaire = ' + self.userComment + ' / note = ' + self.userNote);
             var rating = {stars: self.userNote, comment: self.userComment};
             self.ratings.push(rating);
-            self.voteBtn.classList.remove("hide");
+            self.voteBtn.classList.remove("hideBtn");
             formDiv.innerHTML = "";
             self.userComment = "";
             self.userNote = 0;
             myLayout.listUpdate();
         });
         closeBtn.addEventListener('click', function(){
-            self.voteBtn.classList.remove("hide");
+            self.voteBtn.classList.remove("hideBtn");
             formDiv.innerHTML = "";
             self.userComment = "";
             self.userNote = 0;
         });
     };
-    this.filter = "show";
+    //this.filter = "show";
     this.userNote = 0;
-    this.vote = function(){
+    this.vote = function(){ // attribution de la note "étoile"
         self.userNote = 0;
         var userComment;
         var textarea = document.getElementById('commentaire');
@@ -263,4 +280,3 @@ function Restaurant(name, adress, lat, lng) {
         });
     };
 }
-

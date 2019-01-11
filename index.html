@@ -17,12 +17,14 @@
             (remplacer la valeur par votre clef d'API, sans ommettre les guillemets).
             3. Enregistrez le nouveau fichier.
             */
-            var url = "https://maps.googleapis.com/maps/api/js?key=" + myApiKey + "&libraries=geometry&callback=initLayout";
+            var url = "https://maps.googleapis.com/maps/api/js?key=" + myApiKey + "&libraries=places,geometry&callback=initLayout";
             var script = document.createElement("script");
             script.src = url;
             script.async = true;
             script.defer = true;
-            document.head.appendChild(script);
+            window.onload = function(){
+                document.head.appendChild(script);
+            }
         </script>
     </head>
     <body>
@@ -46,6 +48,7 @@
                 <div id="list" class="col-md-6">
                     <p>Filtrer les résultats par nombre d'étoiles :</p>
                     <input type="text" id="slider" class="js-range-slider" name="my_range" value="" />
+                    <div id="nbResultats"></div>
                     <ul id="listUL">
                     </ul>
                 </div>
