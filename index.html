@@ -17,12 +17,14 @@
             (remplacer la valeur par votre clef d'API, sans ommettre les guillemets).
             3. Enregistrez le nouveau fichier.
             */
-            var url = "https://maps.googleapis.com/maps/api/js?key=" + myApiKey + "&libraries=geometry&callback=initLayout";
+            var url = "https://maps.googleapis.com/maps/api/js?key=" + myApiKey + "&libraries=places,geometry&callback=initLayout";
             var script = document.createElement("script");
             script.src = url;
             script.async = true;
             script.defer = true;
-            document.head.appendChild(script);
+            window.onload = function(){
+                document.head.appendChild(script);
+            }
         </script>
     </head>
     <body>
@@ -46,37 +48,13 @@
                 <div id="list" class="col-md-6">
                     <p>Filtrer les résultats par nombre d'étoiles :</p>
                     <input type="text" id="slider" class="js-range-slider" name="my_range" value="" />
+                    <div id="nbResultats"></div>
                     <ul id="listUL">
                     </ul>
                 </div>
             </div>
         </div>
-        <!--Modal-->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Je donne mon avis</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <p>Donnez une note au restaurant <strong><span id="nameHere"></span></strong><br />
-                                <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                            </p>
-                            <label for="commentaire">Ecrivez votre commentaire : </label>
-                            <textarea class="form-control" id="commentaire" rows="5" required></textarea>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="insertModal"></div>
          <footer>
             <p id="copyright">©2018 <a href="http://www.florentpia.net" target="blank">Florent Pianet</a></p>
         </footer>
@@ -88,7 +66,6 @@
         <script src="./js/app.js"></script>
         <script src="./js/filter.js"></script> 
         <script src="./js/restaurant.js"></script>
-        <!--script src="./js/map.js"></script-->
         <script src="./js/xmlhttpreq.js"></script>
         <script src="./js/dataprocess.js"></script>
     </body>
