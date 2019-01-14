@@ -36,7 +36,7 @@ function Layout(name) {
             // Browser doesn't support Geolocation
             handleLocationError(false, map.getCenter());        
         }
-    
+        /* TODO : Fonction imbriquée, est-ce nécessaire ?? */
         function handleLocationError(browserHasGeolocation, marker, pos) {
             window.alert(browserHasGeolocation ?
                 'Erreur: Le service de géolocalisation a échoué' :
@@ -167,6 +167,7 @@ function Layout(name) {
         }
         document.getElementById("nbResultats").appendChild(countText);
     };
+    /* TODO : Déclarer toutes les propriétés au début de la classe */
     this.requestArray = [];
     this.requestPlacesService = function(){
         var request = {

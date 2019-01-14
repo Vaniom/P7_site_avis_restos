@@ -29,12 +29,14 @@ function Restaurant(name, adress, lat, lng) {
             return Number(moy.toFixed(1));
         }       
     };
+    /* TODO : Toutes les propriétés de la classe en début de classe */
     this.li = document.createElement("li");
     this.title = document.createElement("h3");
     this.note = document.createElement("p");
     this.voteBtn = document.createElement('div');
     this.contentDiv = document.createElement('div');
     this.formDiv = document.createElement('div');
+
     this.showInfos = function () {//Mise en forme des informations et gestion du clic sur le titre
         var listUL = document.getElementById("listUL");
         self.title.textContent = self.name;
@@ -68,6 +70,7 @@ function Restaurant(name, adress, lat, lng) {
         var restoArray = myLayout.restoArray;
         self.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
         setTimeout(showNext, 100);
+        /* TODO: Fonction Imbriquée */
         function showNext () {
             contentDiv.innerHTML = '';
             addressSection.textContent = self.address;
@@ -93,7 +96,8 @@ function Restaurant(name, adress, lat, lng) {
                 var children = restoArray[i].li.childNodes;
                 Array.prototype.filter.call(children, function(element){
                     element.classList.remove("showElt");
-                });    
+                });
+                /* TODO: Empty Else */
             } else {}
         }
             self.toggleBounce();// On declenche l'animation du marqueur
