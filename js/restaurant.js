@@ -6,7 +6,7 @@ function Restaurant(name, adress, lat, lng) {
         lat: lat,
         lng: lng
     };
-    this.ratings = "";
+    this.ratings = [];
     this.marker = new google.maps.Marker({
         position: self.pos,
         map: map,

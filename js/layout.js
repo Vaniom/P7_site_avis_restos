@@ -205,7 +205,7 @@ function Layout(name) {
                         long: place.geometry.location.lng(),
                         ratings: [],
                     };
-                    if (typeof place.reviews !== undefined) {
+                    if (place.reviews !== undefined) {
                         place.reviews.forEach(function(element){
                             newRating = {stars: element.rating, comment: element.text};
                             resto.ratings.push(newRating);
