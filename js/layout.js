@@ -1,11 +1,21 @@
 function Layout(name) {
+
     var self = this;
+
     this.name = name;
+
     this.liste = [];
+
     this.restoArray = [];
+
     this.userCreated = [];
+
     this.map = map;
+
     this.userPos = "";
+
+    this.requestArray = [];
+
     this.init = function(){
         map = new google.maps.Map(document.getElementById('map'), {
             center: {
@@ -18,7 +28,7 @@ function Layout(name) {
         var pos;
         var liste = self.liste;
         if (navigator.geolocation) {
-            //Recupération des coordonnées de l'utilisateur
+            //Recupération de la position de l'utilisateur
             navigator.geolocation.getCurrentPosition(function (position) {
                 self.userPos = {
                     lat: position.coords.latitude,
@@ -30,17 +40,11 @@ function Layout(name) {
                 map.setZoom(9);
                 map.setCenter(self.userPos);
             }, function () {
-                handleLocationError(true, marker, map.getCenter());
+                self.handleLocationError(true, marker, map.getCenter());
             });
         } else {
-            // Browser doesn't support Geolocation
-            handleLocationError(false, map.getCenter());        
-        }
-    
-        function handleLocationError(browserHasGeolocation, marker, pos) {
-            window.alert(browserHasGeolocation ?
-                'Erreur: Le service de géolocalisation a échoué' :
-                'Erreur: Votre navigateur ne supporte pas la geolocalisation');
+            // Le navigateur ne supporte pas la geolocalistaion
+            self.handleLocationError(false, map.getCenter());        
         }
         // placement d'un marqueur à la position de l'utilisateur
         marker = new google.maps.Marker({
@@ -77,6 +81,13 @@ function Layout(name) {
         // On appelle la methode de requete à l'API google places
         setTimeout(self.requestPlacesService, 1000);
     };
+
+    this.handleLocationError = function(browserHasGeolocation, marker, pos) {
+        window.alert(browserHasGeolocation ?
+            'Erreur: Le service de géolocalisation a échoué' :
+            'Erreur: Votre navigateur ne supporte pas la geolocalisation');
+    };
+
     this.listUpdate = function(){
         var liste = self.liste;
         var restoArray = self.restoArray;
@@ -112,6 +123,7 @@ function Layout(name) {
             });
             self.countResults();
     };
+
     this.addRestaurant = function(latLng, map, listener){ 
         var infoContent = document.createElement('div');
         var question = document.createElement('p');
@@ -140,8 +152,6 @@ function Layout(name) {
                 ratings: []
             };
             self.userCreated.push(resto);
-            //console.log('resto = ' + resto);
-            //console.log('liste = ' + self.liste);
             self.listUpdate();
             infoWindow.close();
           });
@@ -155,6 +165,7 @@ function Layout(name) {
         map.panTo(latLng);
         map.setZoom(15);
     };
+
     this.countResults = function() {
         var listUL = document.getElementById("listUL");
         var count = listUL.getElementsByClassName('show').length;
@@ -167,7 +178,7 @@ function Layout(name) {
         }
         document.getElementById("nbResultats").appendChild(countText);
     };
-    this.requestArray = [];
+
     this.requestPlacesService = function(){
         var request = {
             location: map.getCenter(),
@@ -210,7 +221,7 @@ function Layout(name) {
                             newRating = {stars: element.rating, comment: element.text};
                             resto.ratings.push(newRating);
                         });
-                    } else {}
+                    }
                     self.userCreated.push(resto);
                     self.listUpdate();
                 }

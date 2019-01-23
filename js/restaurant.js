@@ -1,7 +1,11 @@
 function Restaurant(name, adress, lat, lng) {
+
     var self = this;
+
     this.name = name;
+
     this.address = adress;
+
     this.pos = {
         lat: lat,
         lng: lng
@@ -12,11 +16,37 @@ function Restaurant(name, adress, lat, lng) {
         map: map,
         title: self.name,
         icon: './img/restaurant.png',
-        animation: null // Attention: à definir au moment de l'instanciation pour prise en compte lors de l'appel de la fonction toggleBounce()
+        animation: null // Attention: à definir au moment de l'instanciation pour prise en compte lors de l'appel à la méthode toggleBounce()
     });
+
     this.average = "";
+
     this.id = "";
+
     this.hasToGetDetails = false;
+
+    this.streetviewImage =  "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" + this.pos.lat + "," + this.pos.lng + "&fov=90&heading=235&pitch=10&key=" + myApiKey;
+
+    this.li = document.createElement("li");
+
+    this.title = document.createElement("h3");
+
+    this.note = document.createElement("p");
+
+    this.voteBtn = document.createElement('div');
+
+    this.contentDiv = document.createElement('div');
+
+    this.addressSection = document.createElement('p');
+
+    this.imgSection = document.createElement('p');
+
+    this.formDiv = document.createElement('div');
+
+    this.userComment = "";
+
+    this.userNote = 0;
+
     this.calculateAverage = function () {
         var somme = 0;
         if (self.average !== undefined){
@@ -29,12 +59,7 @@ function Restaurant(name, adress, lat, lng) {
             return Number(moy.toFixed(1));
         }       
     };
-    this.li = document.createElement("li");
-    this.title = document.createElement("h3");
-    this.note = document.createElement("p");
-    this.voteBtn = document.createElement('div');
-    this.contentDiv = document.createElement('div');
-    this.formDiv = document.createElement('div');
+    
     this.showInfos = function () {//Mise en forme des informations et gestion du clic sur le titre
         var listUL = document.getElementById("listUL");
         self.title.textContent = self.name;
@@ -59,33 +84,16 @@ function Restaurant(name, adress, lat, lng) {
             self.li.classList.remove("show");
         }
         var contentDiv = self.contentDiv;
-        var addressSection = document.createElement('p');
-        var imgSection = document.createElement('p');
+        var addressSection = self.addressSection;
+        var imgSection = self.imgSection;
         imgSection.classList.add("streetviewSection");
         
         self.li.appendChild(contentDiv);
         contentDiv.classList.add("collapse");
         var restoArray = myLayout.restoArray;
         self.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
-        setTimeout(showNext, 100);
-        function showNext () {
-            contentDiv.innerHTML = '';
-            addressSection.textContent = self.address;
-            imgSection.innerHTML = '<img src="' + self.streetviewImage + '" class="streetviewImage" alt="image streetview" />';
-            contentDiv.appendChild(imgSection);
-            addressSection.classList.add("address");
-            contentDiv.appendChild(addressSection);
-            contentDiv.appendChild(self.formDiv);
+        setTimeout(self.showNext, 100);
         
-            for (var j = 0; j < self.ratings.length; j++) {
-                var insertComment = document.createElement("div");
-                var stars = self.ratings[j].stars;
-                var avis = self.ratings[j].comment;
-                insertComment.innerHTML = "<p class='comment'><span class='avis'>Avis N° " + (j+1) + ":  </span>" + avis + "<br/><span class='note'>Note : " + stars + "</span></p>";
-                contentDiv.appendChild(insertComment);
-            }
-        }
-
         for (var i = 0; i < restoArray.length; i++) {
             if (restoArray[i].name != self.name) {
                 restoArray[i].li.classList.remove("clicked");
@@ -93,8 +101,8 @@ function Restaurant(name, adress, lat, lng) {
                 var children = restoArray[i].li.childNodes;
                 Array.prototype.filter.call(children, function(element){
                     element.classList.remove("showElt");
-                });    
-            } else {}
+                });
+            }
         }
             self.toggleBounce();// On declenche l'animation du marqueur
             self.li.classList.toggle("clicked");// On permutte la classe sur l'entrée de liste correspondante
@@ -105,6 +113,28 @@ function Restaurant(name, adress, lat, lng) {
             });
         });
     };
+    
+    this.showNext = function() {
+        var contentDiv = self.contentDiv;
+        var addressSection = self.addressSection;
+        var imgSection = self.imgSection;
+        contentDiv.innerHTML = '';
+        addressSection.textContent = self.address;
+        imgSection.innerHTML = '<img src="' + self.streetviewImage + '" class="streetviewImage" alt="image streetview" />';
+        contentDiv.appendChild(imgSection);
+        addressSection.classList.add("address");
+        contentDiv.appendChild(addressSection);
+        contentDiv.appendChild(self.formDiv);
+        
+        for (var j = 0; j < self.ratings.length; j++) {
+            var insertComment = document.createElement("div");
+            var stars = self.ratings[j].stars;
+            var avis = self.ratings[j].comment;
+            insertComment.innerHTML = "<p class='comment'><span class='avis'>Avis N° " + (j+1) + ":  </span>" + avis + "<br/><span class='note'>Note : " + stars + "</span></p>";
+            contentDiv.appendChild(insertComment);
+        }
+    };
+
     this.toggleBounce = function () { // gestion de l'animation du marqueur
         if (self.marker.getAnimation() !== null) {
             self.marker.setAnimation(null);
@@ -112,6 +142,7 @@ function Restaurant(name, adress, lat, lng) {
             self.marker.setAnimation(google.maps.Animation.BOUNCE);
           }
     };
+
     this.isInRectangle = function () {
         var pointLat = self.pos.lat;
         var pointLng = self.pos.lng;
@@ -122,6 +153,7 @@ function Restaurant(name, adress, lat, lng) {
             return false;
         }
     };
+
     this.colorTheStars = function(element, insertIn){ // Methode pour afficher le système de notation etoiles
         var note = element;
         var averageStars = document.createElement("p");
@@ -142,7 +174,7 @@ function Restaurant(name, adress, lat, lng) {
             var span = document.createElement("span"); 
             span.textContent = note + " ";
             averageStars.appendChild(span);
-        }else {}
+        }
         for (var i = 0; i < fullStars; i++) {
             iFull = document.createElement("i");
             iFull.classList.add("fas");
@@ -171,8 +203,7 @@ function Restaurant(name, adress, lat, lng) {
         averageStars.appendChild(nbAvis);
         insertIn.appendChild(averageStars);
     };
-    this.streetviewImage = "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" + this.pos.lat + "," + this.pos.lng + "&fov=90&heading=235&pitch=10&key=" + myApiKey;
-
+    
     this.clicOnMarker = function () {
         var infoContent = document.createElement("div");
         var infoMoyenne = document.createElement("p");
@@ -193,8 +224,7 @@ function Restaurant(name, adress, lat, lng) {
             }); 
         });
     };
-    this.userComment = "";
-
+    
     this.constructForm = function(listener){
         var formDiv = document.createElement('div');
         formDiv.innerHTML = '<div id="voteForm"><form><p>Donnez une note :<br /><div class="rating"><i id="note1" class="vote far fa-star"></i><i id="note2" class="vote far fa-star"></i><i id="note3" class="vote far fa-star"></i><i id="note4" class="vote far fa-star"></i><i id="note5" class="vote far fa-star"></i></div></p><label for="commentaire">Votre commentaire :</label><textarea class="form-control" id="commentaire" rows="5" required></textarea></form><button type="submit" id="saveBtn" class="btn btn-primary">Envoyer</button><button type="button" id="closeBtn" class="btn btn-secondary">Fermer</button></div>';
@@ -220,8 +250,7 @@ function Restaurant(name, adress, lat, lng) {
             self.userNote = 0;
         });
     };
-    //this.filter = "show";
-    this.userNote = 0;
+
     this.vote = function(){ // attribution de la note "étoile"
         self.userNote = 0;
         var userComment;
