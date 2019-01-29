@@ -137,24 +137,34 @@ function Layout(name) {
         validButton.classList.add('btn-sm');
         infoContent.appendChild(validButton);
         creationSection = document.createElement('div');
-        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' required /><br /><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
+        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' aria-describedby='nameHelpBlock' required/><br /><small id='nameHelpBlock' class='form-text text-muted'>Le nom doit êtrre renseigné.</small><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
         creationSection.style.display = 'none';
         infoContent.appendChild(creationSection);
         var listener2 = validButton.addEventListener("click", function(){
-          creationSection.style.display = 'block';
-          var submitButton = document.getElementById('submitButton');
-          submitButton.addEventListener('click', function(){
-            var resto = {
-                restaurantName: document.getElementById('name').value,
-                adress: "",
-                lat: latLng.lat(),
-                long: latLng.lng(),
-                ratings: []
-            };
-            self.userCreated.push(resto);
-            self.listUpdate();
-            infoWindow.close();
-          });
+            validButton.style.display = "none";
+            creationSection.style.display = 'block';
+            var submitButton = document.getElementById('submitButton');
+            submitButton.addEventListener('click', function(){
+                var champName = document.getElementById('name').value;
+                console.log("champName = " + champName);
+                if (champName !== "") {
+                    var resto = {
+                        restaurantName: document.getElementById('name').value,
+                        adress: "",
+                        lat: latLng.lat(),
+                        long: latLng.lng(),
+                        ratings: []
+                    };
+                    self.userCreated.push(resto);
+                    self.listUpdate();
+                    infoWindow.close();
+                }else {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.getElementById('nameHelpBlock').style.display = "block";
+                }
+                
+            });
         });
           var infoWindow = new google.maps.InfoWindow({
             maxWidth: 300,

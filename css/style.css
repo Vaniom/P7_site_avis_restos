@@ -81,6 +81,10 @@ footer {
     float: right;
     font-size: 1rem;
 }
+#nameHelpBlock {
+    display: none;
+    color: red !important;
+}
 .js-range-slider {
     width: 50% !important;
 }
