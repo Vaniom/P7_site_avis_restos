@@ -137,7 +137,7 @@ function Layout(name) {
         validButton.classList.add('btn-sm');
         infoContent.appendChild(validButton);
         creationSection = document.createElement('div');
-        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' required /><br /><input type='text' placeholder='adresse' id='address' class='form-control' /><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
+        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' required /><br /><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
         creationSection.style.display = 'none';
         infoContent.appendChild(creationSection);
         var listener2 = validButton.addEventListener("click", function(){
@@ -146,7 +146,7 @@ function Layout(name) {
           submitButton.addEventListener('click', function(){
             var resto = {
                 restaurantName: document.getElementById('name').value,
-                adress: document.getElementById('address').value,
+                adress: "",
                 lat: latLng.lat(),
                 long: latLng.lng(),
                 ratings: []

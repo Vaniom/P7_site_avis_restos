@@ -64,8 +64,12 @@ function Restaurant(name, adress, lat, lng) {
         var listUL = document.getElementById("listUL");
         self.title.textContent = self.name;
         var grade = self.calculateAverage();
+        var indicator = document.createElement('div');
+        indicator.id = 'indicator';
+        indicator.innerHTML = "<i class='far fa-plus-square'></i>";
         self.colorTheStars(grade, self.note);
         self.li.appendChild(self.title);
+        self.title.appendChild(indicator);
         self.li.id = self.name;
         self.li.classList.add("clickable");
         self.voteBtn.id = 'voteBtn';
@@ -93,7 +97,7 @@ function Restaurant(name, adress, lat, lng) {
         var restoArray = myLayout.restoArray;
         self.title.addEventListener("click", function(){// Ecouteur d'evenement au clic
         setTimeout(self.showNext, 100);
-        
+
         for (var i = 0; i < restoArray.length; i++) {
             if (restoArray[i].name != self.name) {
                 restoArray[i].li.classList.remove("clicked");
@@ -111,6 +115,11 @@ function Restaurant(name, adress, lat, lng) {
             Array.prototype.filter.call(childNodes, function(element){
                 element.classList.toggle("showElt");
             });
+            if (self.li.classList.contains('clicked')) {
+                indicator.innerHTML = "<i class='far fa-minus-square'></i>";
+            } else {
+                indicator.innerHTML = "<i class='far fa-plus-square'></i>";
+            }
         });
     };
     
