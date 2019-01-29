@@ -27,9 +27,8 @@ $(function () {
                         restoArray[i].marker.setVisible(true);
                         myLayout.countResults();
                     }
-                }else {}
+                }
             }
-            
         }
     });
 });

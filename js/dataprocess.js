@@ -16,6 +16,5 @@ function executerRequete() {
         var url = "resto_data.json";
         xhr.open("GET", url, true);
         xhr.send(null);
-    } else {
     }
 }

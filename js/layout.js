@@ -4,11 +4,11 @@ function Layout(name) {
 
     this.name = name;
 
-    this.liste = [];
+    this.liste = []; // array de stockage des données recupérées dans le JSON
 
-    this.restoArray = [];
+    this.restoArray = []; // array de stockage des objets créés
 
-    this.userCreated = [];
+    this.userCreated = []; //array de stockage des restaurants récupérés via google places et créés par l'utilisateur
 
     this.map = map;
 
@@ -16,7 +16,7 @@ function Layout(name) {
 
     this.requestArray = [];
 
-    this.init = function(){
+    this.init = function(){ // on crée un nouveau fond de carte
         map = new google.maps.Map(document.getElementById('map'), {
             center: {
                 lat: 48.864716,
@@ -34,12 +34,13 @@ function Layout(name) {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-    
+
+                //On definit les propriétés du marqueur de position de l'utilisateur
                 marker.setPosition(self.userPos);
                 marker.setTitle('Votre position');
                 map.setZoom(9);
                 map.setCenter(self.userPos);
-            }, function () {
+            }, function () { // appel de la fonction de callBack
                 self.handleLocationError(true, marker, map.getCenter());
             });
         } else {
@@ -53,27 +54,27 @@ function Layout(name) {
         });
         // Execution de la requete de traitement des données du fichier JSON
         executerRequete();
-        // definition d'un polygone aux dimensions de la zone affichée
+        // definition d'un rectangle aux dimensions de la zone affichée
         rectangle = new google.maps.Rectangle();
-        map.addListener('bounds_changed', function(){
+        map.addListener('bounds_changed', function(){ // ajout un listener sur la modification des bornes
             var my_range = $(".js-range-slider").data("ionRangeSlider"); //stockage de l'instance du slider ds une variable
             my_range.reset();// reset des données du slider aux données initiales
             rectangle.setOptions({
-                strokeColor: '#FF0000',
-                    strokeOpacity: 0.0,
+                strokeColor: '#FF0000', // couleur de contour
+                    strokeOpacity: 0.0, // regler l'opacité à 0
                     strokeWeight: 2,
-                    fillColor: '#FF0000',
-                    fillOpacity: 0.0,
+                    fillColor: '#FF0000', // couleur de remplissage
+                    fillOpacity: 0.0, // opacité sur 0
                     map: map,
-                    bounds: map.getBounds()
+                    bounds: map.getBounds() // bornage aux dimensions de la map
             });
        
-            self.listUpdate();
+            self.listUpdate(); // mise à jour de l'affichage
         });
-        var listener1 = rectangle.addListener("click", function(event){
-            self.addRestaurant(event.latLng, map, listener1);
+        var listener1 = rectangle.addListener("click", function(event){ // ajout d'un listener sur le click dans le rectangle
+            self.addRestaurant(event.latLng, map, listener1); 
         });
-        map.addListener("dragend", function(){
+        map.addListener("dragend", function(){ // ajout d'un listener sur le glissement de la carte
             self.userCreated.splice(0, self.userCreated.length);
             self.requestPlacesService();
             self.listUpdate();
@@ -88,6 +89,7 @@ function Layout(name) {
             'Erreur: Votre navigateur ne supporte pas la geolocalisation');
     };
 
+    // mise à jour de l'affichage
     this.listUpdate = function(){
         var liste = self.liste;
         var restoArray = self.restoArray;
@@ -108,7 +110,8 @@ function Layout(name) {
             liste = liste.filter(function(elem,index,array){
                 return cache[elem.restaurantName]?0:cache[elem.restaurantName]=1;
             });
-            liste.forEach(function(element) {// On boucle sur la liste et on instancie un nouvel objet pour chaque element du tableau
+            // On boucle sur la liste et on instancie un nouvel objet pour chaque element du tableau
+            liste.forEach(function(element) {
                 newResto = new Restaurant(element.restaurantName, element.address, element.lat, element.long);
                 newResto.ratings = element.ratings;
                 newResto.hasToGetDetails = element.hasToGetDetails;
@@ -124,6 +127,7 @@ function Layout(name) {
             self.countResults();
     };
 
+    // ajout d'un nouveau restaurant par l'utilisateur (lors du clic sur la carte)
     this.addRestaurant = function(latLng, map, listener){ 
         var infoContent = document.createElement('div');
         var question = document.createElement('p');
@@ -137,7 +141,7 @@ function Layout(name) {
         validButton.classList.add('btn-sm');
         infoContent.appendChild(validButton);
         creationSection = document.createElement('div');
-        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' aria-describedby='nameHelpBlock' required/><br /><small id='nameHelpBlock' class='form-text text-muted'>Le nom doit êtrre renseigné.</small><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
+        creationSection.innerHTML = "<form class='creationForm'><input type='text' placeholder='nom' id='name' class='form-control form-control-sm' aria-describedby='nameHelpBlock' required/><br /><small id='nameHelpBlock' class='form-text text-muted'>Le nom doit être renseigné.</small><br /><button id='submitButton' class='btn btn-success btn-sm'>Valider</button></form>";
         creationSection.style.display = 'none';
         infoContent.appendChild(creationSection);
         var listener2 = validButton.addEventListener("click", function(){
@@ -147,7 +151,8 @@ function Layout(name) {
             submitButton.addEventListener('click', function(){
                 var champName = document.getElementById('name').value;
                 console.log("champName = " + champName);
-                if (champName !== "") {
+                // verification du formulaire
+                if (champName !== "") { 
                     var resto = {
                         restaurantName: document.getElementById('name').value,
                         adress: "",
@@ -166,16 +171,19 @@ function Layout(name) {
                 
             });
         });
+        // on injecte le formulaire dans une infoWindow
           var infoWindow = new google.maps.InfoWindow({
             maxWidth: 300,
             position: latLng,
             map: map,
             content: infoContent
         });
+        //reglage de la vue
         map.panTo(latLng);
         map.setZoom(15);
     };
 
+    // comptage des resultats affichés dans la liste
     this.countResults = function() {
         var listUL = document.getElementById("listUL");
         var count = listUL.getElementsByClassName('show').length;
@@ -189,8 +197,9 @@ function Layout(name) {
         document.getElementById("nbResultats").appendChild(countText);
     };
 
+    //construction de la requete à google places
     this.requestPlacesService = function(){
-        var request = {
+        var request = { // preparation de la requete
             location: map.getCenter(),
             radius: '5000',
             type: ['restaurant']
@@ -198,12 +207,11 @@ function Layout(name) {
         var loc;
         var resto;
         var ratingsArray = [];
-        // On effectue une requête nearbySearch
+        // On effectue une requête nearbySearch et pour chaque resultat obtenu, on appelle la fonction getDetails (pour obtenir les infos complémentaires)
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch(request, callback);
         function callback(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                //console.log("results = " + results);
                 for (var i = 0; i < results.length; i++) {
                     loc = results[i];
                     ratingsArray.splice(0, ratingsArray.length);
@@ -226,6 +234,7 @@ function Layout(name) {
                         long: place.geometry.location.lng(),
                         ratings: [],
                     };
+                    // on push chaque couple {note, commentaire} dans l'array resto.ratings précédemment définit
                     if (place.reviews !== undefined) {
                         place.reviews.forEach(function(element){
                             newRating = {stars: element.rating, comment: element.text};
