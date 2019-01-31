@@ -152,10 +152,9 @@ function Layout(name) {
                 var champName = document.getElementById('name').value;
                 console.log("champName = " + champName);
                 // verification du formulaire
-                var regex = /^[0-9A-Z]{2,}/i;
-                var nameTrim = champName.trim();
-                if (regex.test(nameTrim)){
-                /*if (champName !== "") { */
+                var regex = /^[0-9A-Z]{2,}/i;// doit commencer par un chiffre ou une lettre, longueur minimum 2 caractères, insensible à la casse (i)
+                var nameTrim = champName.trim();// methode trim() pour enlever les blancs en debut et fin de chaine
+                if (regex.test(nameTrim)){ // on teste la valeur saisie par l'utilisateur
                     var resto = {
                         restaurantName: document.getElementById('name').value,
                         adress: "",

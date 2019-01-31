@@ -275,23 +275,23 @@ function Restaurant(name, adress, lat, lng) {
     this.constructForm = function(listener){
         //mise en forme du formulaire
         var formDiv = document.createElement('div');
-        formDiv.innerHTML = '<div id="voteForm"><form><p>Donnez une note :<br /><div class="rating"><i id="note1" class="vote far fa-star"></i><i id="note2" class="vote far fa-star"></i><i id="note3" class="vote far fa-star"></i><i id="note4" class="vote far fa-star"></i><i id="note5" class="vote far fa-star"></i></div></p><label for="commentaire">Votre commentaire :</label><textarea class="form-control" id="commentaire" rows="5" aria-describedby="commentHelpBlock" required></textarea><small id="commentHelpBlock" class="form-text text-muted">Vous devez saisir un commentaire de minimum 3 caractères. Le premier caractère doit impérativement être une lettre un chiffre ou des guillemets ( " ).</small></form><br /><button type="submit" id="saveBtn" class="btn btn-primary">Envoyer</button><button type="button" id="closeBtn" class="btn btn-secondary">Fermer</button></div>';
+        formDiv.innerHTML = '<div id="voteForm"><form><p>Donnez une note :<br /><div class="rating"><i id="note1" class="vote far fa-star"></i><i id="note2" class="vote far fa-star"></i><i id="note3" class="vote far fa-star"></i><i id="note4" class="vote far fa-star"></i><i id="note5" class="vote far fa-star"></i></div></p><label for="commentaire">Votre commentaire :</label><textarea class="form-control" id="commentaire" rows="5" aria-describedby="commentHelpBlock" required></textarea><small id="commentHelpBlock" class="form-text text-muted">Vous devez saisir un commentaire d\'une longueur minimum de 3 caractères. Le premier caractère doit impérativement être une lettre, un chiffre ou des guillemets ( " ).</small></form><br /><button type="submit" id="saveBtn" class="btn btn-primary">Envoyer</button><button type="button" id="closeBtn" class="btn btn-secondary">Fermer</button></div>';
         $(self.formDiv).append(formDiv);
         var saveBtn = document.getElementById('saveBtn');
         var closeBtn = document.getElementById('closeBtn');
         saveBtn.addEventListener('click', function(e){ // ajout d'un listener lors du click sur le bouton de validation
             e.preventDefault();
             self.userComment = document.getElementById('commentaire').value;
-            var regex = /^[0-9A-Z"]{3,}/i;
-            if (regex.test(self.userComment.trim())) {
-            /*if (self.userComment !== "") { */// verification que le champ 'commentaire' n'est pas vide
+            var regex = /^[0-9A-Z"]{3,}/i; // doit commencer par un chiffre, une lettre ou des guillemets, longueur minimum 3 caractères, insensible à la casse (i)
+            //test du commentaire saisi par l'utilisateur
+            if (regex.test(self.userComment.trim())) { // méthode trim() pour enlever les blancs en debut et fin de chaine.
                 var rating = {stars: self.userNote, comment: self.userComment};
-            self.ratings.push(rating);
-            self.voteBtn.classList.remove("hideBtn");
-            formDiv.innerHTML = "";
-            self.userComment = "";
-            self.userNote = 0;
-            myLayout.listUpdate();
+                self.ratings.push(rating);
+                self.voteBtn.classList.remove("hideBtn");
+                formDiv.innerHTML = "";
+                self.userComment = "";
+                self.userNote = 0;
+                myLayout.listUpdate();
             } else {
                 event.preventDefault();
                 event.stopPropagation();
